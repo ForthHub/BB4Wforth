@@ -1,0 +1,139 @@
+				BB4Wforth
+				---------
+
+INTRODUCTION
+
+BB4Wforth is a Forth system for Microsoft Windows (Windows 95, 98, Me, 2000,
+XP, Vista and Windows 7) which uses BBC BASIC as its input/output subsystem.
+BB4Wforth has access to most of the I/O facilities of BBC BASIC, including
+coloured text and graphics, buffered file input/output and 'OSCLI' commands.
+In addition, BB4Wforth can access the Windows API and other DLLs, allowing
+a Forth program to utilise Windows features such as GUI controls.  Knowledge
+of BBC BASIC is not essential for using BB4Wforth, but it can be helpful.
+
+BB4Wforth is based on Jonesforth (http://annexia.org/forth/).  Although the
+original Jonesforth is rather non-standard, BB4Wforth incorporates several
+corrections and additions to improve its compatibility with other Forths.
+BB4Wforth versions 0.33 and later pass the Hayes CORE tests successfully.
+
+BB4Wforth is supplied in both source form and as a self-contained Windows
+executable.  The files in the BB4Wforth.zip archive are as follows:
+
+  bb4wforth.txt		This help file
+  bb4wforth.f		A modified and extended version of jonesforth.f 
+  forth.bbc		The BBC BASIC source code (tokenised format)
+  forth.bas		The BBC BASIC source code (plain text format)
+  forth.exe		The Windows executable (requires no other files)
+  fern.f		An example of graphical output
+  hanoi.f		An example of coloured text output
+  midi.f		An example of accessing the Windows API
+  menu.f		An example of handling Windows events
+  sieve.f		A Sieve of Eratosthenes benchmark
+  tester.fr		The Hayes test harness (must be run first)
+  core.fr		The Hayes CORE test suite (run after tester.fr)
+
+To rebuild BB4Wforth from the source files requires the full version of
+'BBC BASIC for Windows', details at http://www.bb4w.com/
+
+OPERATION
+
+When BB4Wforth is started it announces itself in a GUI window as follows:
+
+  BB4Wforth version 0.38 adapted from Jonesforth version 47
+  Corrections and additions by Richard Russell, 19-Oct-2009
+  251134 cells remaining
+  OK
+
+At this point normal Forth commands and definitions may be entered.  To
+read a Forth program from a file, such as one of the supplied examples,
+enter the following:  S" filename" EXEC (or S" filename" INCLUDED) and
+press the Enter (Return) key.  BB4Wforth is case sensitive.
+
+To list the Forth programs in the 'current directory' enter DIR.  To see
+what Forth words are already defined, enter WORDS.  To quit BB4Wforth
+enter BYE (or click on the Close button).
+
+You can alternatively execute a Forth program directly, by specifying
+its name at a command prompt (or via a shortcut) as follows:
+
+  forth progname.f
+
+If you're not very familiar with Forth, there is a useful tutorial here:
+http://www.murphywong.net/hello/simple.htm .  Most (but not all) of the
+sample code listed there will run successfully in BB4Wforth.
+
+FORTH WORDS
+
+The following standard Forth words, present in Jonesforth but implemented
+in a non-standard way, have been corrected in BB4Wforth: DEPTH  .S  /MOD
+U.  ALLOT  CREATE  TRUE  HERE  FIND  WHILE  REPEAT  WORD  KEY
+
+The following standard Forth words, absent from Jonesforth, have been
+added in BB4Wforth: M*  UM*  */MOD  U/MOD  UM/MOD  SM/MOD  FM/MOD  D+  D-
+ROLL  R@  DO  ?DO  I  J  LEAVE  UNLOOP  LOOP  +LOOP  <BUILDS  DOES>  ABS
+MAX  MIN  PAGE  AT-XY  MS  TYPE  INCLUDED  [CHAR]  2OVER  CELL+  CHARS
+CHAR+  2!  2@  LSHIFT  RSHIFT  >BODY  MOVE  FILL  .(  C"  <#  #  #S  HOLD
+SIGN  #>  DIGIT  >NUMBER  POSTPONE  EVALUATE  ACCEPT  2R>  2>R  CONVERT
+
+The following custom Forth words, specific to BB4Wforth, are available:
+
+BGET ( chan -- byte )	\ Read a byte from a file (as BBC BASIC)
+BPUT ( byte chan -- )	\ Write a byte to a file (as BBC BASIC)
+CLG ( -- )		\ Clear the graphics viewport (as BBC BASIC)
+CLOSE ( chan -- )	\ Close a file (or all files) (as BBC BASIC)
+CLS ( -- )		\ Clear the text viewport (as BBC BASIC)
+COLOUR ( colnum -- )	\ Select the text fgnd/bgnd colour (as BBC BASIC)
+DIR ( -- )		\ List the *.f* files in the current directory
+DRAW ( x y -- )		\ Draw a line to coordinates x,y (as BBC BASIC)
+DRAWBY ( dx dy -- )	\ Draw relative by dx,dy (as BBC BASIC 'DRAW BY')
+EXEC ( str len -- )	\ Read input from a file (as BBC BASIC *EXEC)
+FLOOD ( x y -- )	\ Flood fill from coords x,y (as BBC BASIC 'FILL')
+GCOL ( col mode -- )	\ Select the graphics colour/mode (as BBC BASIC)
+GET ( -- char )		\ Read a character from the keyboard (as BBC BASIC)
+INKEY ( time -- key )	\ Read or test the keyboard (as BBC BASIC)
+MODE ( mode -- )	\ Select a screen mode (as BBC BASIC)
+MOVETO ( x y -- )	\ Move graphics pointer to x,y (as BBC BASIC 'MOVE')
+MOVEBY ( dx dy -- )	\ Move relative by dx,dy (as BBC BASIC 'MOVE BY')
+OPENIN ( sz -- chan )	\ Open an existing file for input (as BBC BASIC)
+OPENOUT ( sz -- chan )	\ Create a new file for output (as BBC BASIC)
+OPENUP ( sz -- chan )	\ Open an existing file for update (as BBC BASIC)
+ORIGIN ( x y - )	\ Set the graphics plotting origin (as BBC BASIC)
+OSCLI ( str len -- )	\ Issue an 'OS' command (as BBC BASIC)
+PLOT ( x y n -- )	\ Plot or draw at coordinates x,y (as BBC BASIC)
+POLL ( -- )		\ Execute a pending Windows event (e.g. ONSYS)
+SYSCALL ( addr -- res ) \ Call the routine at memory address addr
+TABXY ( x y -- )	\ Move the text cursor (as BBC BASIC 'TAB(X,Y)')
+
+LoadLibrary ( sz -- hdll )		\ Load a Windows library (DLL)
+FreeLibrary ( hdll -- result )		\ Free a Windows library (DLL)
+GetProcAddress ( hdll sz -- addr )	\ Get the address of a function
+(n.b. sz = nul-terminated string e.g. Z" mystring").
+
+The following read-only string variables are defined:
+
+VERSION$ ( -- str len )	\ The BB4Wforth version number
+cmd$ ( -- str len )	\ The command line tail supplied to forth.exe
+dir$ ( -- str len )	\ The directory from which BB4Wforth was loaded
+lib$ ( -- str len )	\ The directory containing library files
+tmp$ ( -- str len )	\ The user's temporary directory 
+usr$ ( -- str len )	\ The user's Documents directory 
+
+The following numeric variables are defined:
+
+ERR C@		\ The number of the most recent error (as BBC BASIC)
+hwnd @		\ The 'window handle' for the main (output) window
+memhdc @	\ The 'device context' for the output bitmap
+prthdc @	\ The 'device context' for the current printer (if any)
+hcsr @		\ The handle for the mouse pointer (cursor)
+hpal @		\ The handle for the colour palette
+msg @		\ The iMsg value (for use with ONMOUSE, ONMOVE and ONSYS)
+wparam @	\ The wParam value (for use with ONMOUSE, ONMOVE and ONSYS)
+lparam @	\ The lParam value (for use with ONMOUSE, ONMOVE and ONSYS)
+midiid @	\ The MIDI device ID (non-zero if a MIDI file is playing)
+hfiles @	\ An array of file handles indexed by channel number 
+flags @		\ BBC BASIC's control flags (MSB set if ESCape pressed)
+vduvar @	\ An array of text and graphics parameters (as BBC BASIC)
+ox @		\ The horizontal offset between the bitmap and the window
+oy @		\ The vertical offset between the bitmap and the window
+
+Richard Russell, October 2009  http://www.rtrussell.co.uk/
